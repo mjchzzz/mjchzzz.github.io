@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="读书笔记,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="场景这是一个影片出租店的场景，计算每一位顾客的消费金额并打印报表（statement）。操作者告诉程序：顾客租了哪些影片、租期多长，程序便根据租赁时间和影片类型算出费用。影片分为三类: 普通片、儿童片和新片。除了计算费用，还要为常客计算点数；点数会随着租片种类是否为新片而有不同。 类图 代码12345678910111213141516171819202122232425public class">
+<meta name="keywords" content="读书笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《重构 改善既有代码的设计》 第一章 重构，第一个案例">
+<meta property="og:url" content="http://mjc.wiki/refactoring-1/index.html">
+<meta property="og:site_name" content="mjc.wiki">
+<meta property="og:description" content="场景这是一个影片出租店的场景，计算每一位顾客的消费金额并打印报表（statement）。操作者告诉程序：顾客租了哪些影片、租期多长，程序便根据租赁时间和影片类型算出费用。影片分为三类: 普通片、儿童片和新片。除了计算费用，还要为常客计算点数；点数会随着租片种类是否为新片而有不同。 类图 代码12345678910111213141516171819202122232425public class">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://mjc.wiki/images/2019090401.png">
+<meta property="og:image" content="http://mjc.wiki/images/2019090404.png">
+<meta property="og:updated_time" content="2019-09-04T17:46:35.925Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《重构 改善既有代码的设计》 第一章 重构，第一个案例">
+<meta name="twitter:description" content="场景这是一个影片出租店的场景，计算每一位顾客的消费金额并打印报表（statement）。操作者告诉程序：顾客租了哪些影片、租期多长，程序便根据租赁时间和影片类型算出费用。影片分为三类: 普通片、儿童片和新片。除了计算费用，还要为常客计算点数；点数会随着租片种类是否为新片而有不同。 类图 代码12345678910111213141516171819202122232425public class">
+<meta name="twitter:image" content="http://mjc.wiki/images/2019090401.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://mjc.wiki/refactoring-1/">
+
+
+
+
+
+  <title>《重构 改善既有代码的设计》 第一章 重构，第一个案例 | mjc.wiki</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?95580134c5d16154ebef76308044218d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">mjc.wiki</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mjc.wiki/refactoring-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="mjc">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="mjc.wiki">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">《重构 改善既有代码的设计》 第一章 重构，第一个案例</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-04T01:17:08+08:00">
+                2019-09-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>这是一个影片出租店的场景，计算每一位顾客的消费金额并打印报表（statement）。操作者告诉程序：顾客租了哪些影片、租期多长，程序便根据租赁时间和影片类型算出费用。影片分为三类: 普通片、儿童片和新片。除了计算费用，还要为常客计算点数；点数会随着租片种类是否为新片而有不同。</p>
+<h2 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h2><p><img src="../images/2019090401.png" alt="image"></p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">public class Movie &#123;</span><br><span class="line">	public static final int CHILDRENS = 2;</span><br><span class="line">	public static final int REGULAR = 0;</span><br><span class="line">	public static final int NEW_RELEASE = 1;</span><br><span class="line">	private String _title;</span><br><span class="line">	private int _priceCode;</span><br><span class="line"></span><br><span class="line">	public Movie(String title, int priceCode) &#123;</span><br><span class="line">		_title = title;</span><br><span class="line">		_priceCode = priceCode;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public int getPriceCode() &#123;</span><br><span class="line">		return _priceCode;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public String getTitle() &#123;</span><br><span class="line">		return _title;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public void setPriceCode(int priceCode) &#123;</span><br><span class="line">		_priceCode = priceCode;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public class Rental &#123;</span><br><span class="line">	private Movie _movie; // 影片</span><br><span class="line">	private int _daysRented; // 租期</span><br><span class="line"></span><br><span class="line">	public Rental(Movie movie, int daysRented) &#123;</span><br><span class="line">		_movie = movie;</span><br><span class="line">		_daysRented = daysRented;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public int getDaysRented() &#123;</span><br><span class="line">		return _daysRented;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public Movie getMovie() &#123;</span><br><span class="line">		return _movie;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">public class Customer &#123;</span><br><span class="line">	private String _name; // 姓名</span><br><span class="line">	private Vector _rentals = new Vector(); // 租借记</span><br><span class="line"></span><br><span class="line">	public Customer(String name) &#123;</span><br><span class="line">		_name = name;</span><br><span class="line">	&#125;;</span><br><span class="line"></span><br><span class="line">	public void addRental(Rental arg) &#123;</span><br><span class="line">		_rentals.addElement(arg);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public String getName() &#123;</span><br><span class="line">		return _name;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public String statement() &#123;</span><br><span class="line">		double totalAmount = 0; // 总消费金。</span><br><span class="line">		int frequentRenterPoints = 0; // 常客积点</span><br><span class="line">		Enumeration rentals = _rentals.elements();</span><br><span class="line">		String result = &quot;Rental Record for &quot; + getName() + &quot;\n&quot;;</span><br><span class="line">		while (rentals.hasMoreElements()) &#123;</span><br><span class="line">			double thisAmount = 0;</span><br><span class="line">			Rental each = (Rental) rentals.nextElement(); // 取得一笔租借记。</span><br><span class="line">			// determine amounts for each line</span><br><span class="line">			switch (each.getMovie().getPriceCode()) &#123; // 取得影片出租价格</span><br><span class="line">			case Movie.REGULAR: // 普通片</span><br><span class="line">				thisAmount += 2;</span><br><span class="line">				if (each.getDaysRented() &gt; 2)</span><br><span class="line">					thisAmount += (each.getDaysRented() - 2) * 1.5;</span><br><span class="line">				break;</span><br><span class="line">			case Movie.NEW_RELEASE: // 新片</span><br><span class="line">				thisAmount += each.getDaysRented() * 3;</span><br><span class="line">				break;</span><br><span class="line">			case Movie.CHILDRENS: // 儿童。</span><br><span class="line">				thisAmount += 1.5;</span><br><span class="line">				if (each.getDaysRented() &gt; 3)</span><br><span class="line">					thisAmount += (each.getDaysRented() - 3) * 1.5;</span><br><span class="line">				break;</span><br><span class="line">			&#125;</span><br><span class="line">			// add frequent renter points （累计常客积点）</span><br><span class="line">			frequentRenterPoints++;</span><br><span class="line">			// add bonus for a two day new release rental</span><br><span class="line">			if ((each.getMovie().getPriceCode() == Movie.NEW_RELEASE)</span><br><span class="line">					&amp;&amp; each.getDaysRented() &gt; 1)</span><br><span class="line">				frequentRenterPoints++;</span><br><span class="line">			// show figures for this rental（显示此笔租借记录）</span><br><span class="line">			result += &quot;\t&quot; + each.getMovie().getTitle() + &quot;\t&quot;</span><br><span class="line">					+ String.valueOf(thisAmount) + &quot;\n&quot;;</span><br><span class="line">			totalAmount += thisAmount;</span><br><span class="line">		&#125;</span><br><span class="line">		// add footer lines（结尾打印）</span><br><span class="line">		result += &quot;Amount owed is &quot; + String.valueOf(totalAmount) + &quot;\n&quot;;</span><br><span class="line">		result += &quot;You earned &quot; + String.valueOf(frequentRenterPoints)</span><br><span class="line">				+ &quot; frequent renter points&quot;;</span><br><span class="line">		return result;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="重构步骤"><a href="#重构步骤" class="headerlink" title="重构步骤"></a>重构步骤</h2><ol>
+<li><p>Customer的statement方法里的计算出租金额较复杂。运用 extract method 抽取amountFor方法提取代码的逻辑泥团。</p>
+</li>
+<li><p>amountFor方法仅使用了Rental类的信息，却没使用Customer的信息。运用Move Method，把代码拷贝到Rental class内，调整代码。</p>
+</li>
+<li><p>为常客计算点数逻辑，参照amountFor方法，抽到Rental class中。</p>
+</li>
+<li><p>运用多态取代与价格相关的条件逻辑。</p>
+</li>
+</ol>
+<p>switch 语句。在另一个对象的属性（attribute）基础上运用switch 语句，并不是什么好主意。如果不得不使用，也应该在对象自己的数据上使用，而不是在别人的数据上使用。<br><br>运用多态（polymorphism）取代与价格相关的条件逻辑. <br><br>新创建price类，抽象公共方法 getPriceCode。<br><br>分别创建价格种类类继承价格，在子类中实现不同价格之间逻辑。</p>
+<h2 id="重构后"><a href="#重构后" class="headerlink" title="重构后"></a>重构后</h2><p><img src="../images/2019090404.png" alt="image"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/读书笔记/" rel="tag"># 读书笔记</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/question-1/" rel="next" title="给定二维平面整数点集输出“最大点集”">
+                <i class="fa fa-chevron-left"></i> 给定二维平面整数点集输出“最大点集”
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/cache-3/" rel="prev" title="《深入分布式缓存》 第三章">
+                《深入分布式缓存》 第三章 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">mjc</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#场景"><span class="nav-number">1.</span> <span class="nav-text">场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类图"><span class="nav-number">2.</span> <span class="nav-text">类图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码"><span class="nav-number">3.</span> <span class="nav-text">代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#重构步骤"><span class="nav-number">4.</span> <span class="nav-text">重构步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#重构后"><span class="nav-number">5.</span> <span class="nav-text">重构后</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">mjc</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
