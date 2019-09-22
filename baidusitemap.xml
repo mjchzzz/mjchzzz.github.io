@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>http://mjc.wiki/refactoring-2/</loc>
+    <lastmod>2019-09-22</lastmod>
+  </url>  <url>
+    <loc>http://mjc.wiki/cache-3/</loc>
+    <lastmod>2019-09-22</lastmod>
+  </url>  <url>
+    <loc>http://mjc.wiki/refactoring-1/</loc>
+    <lastmod>2019-09-04</lastmod>
+  </url>  <url>
+    <loc>http://mjc.wiki/question-1/</loc>
+    <lastmod>2019-09-02</lastmod>
+  </url>  <url>
+    <loc>http://mjc.wiki/hello-world/</loc>
+    <lastmod>2019-09-01</lastmod>
+  </url>
+</urlset>
