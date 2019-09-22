@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="mjc.wiki">
 <meta property="og:description" content="第三章 动手写缓存3.1 缓存定义的规范核心概念：  CachingProvider CacheManager Cache Entry  Store-By-Value VS Store-By-Reference  Store-By-Value 常见堆内缓存 Store-By-Reference 常见堆外缓存  过期策略ExpiryPolicy 12345publicinterface Expiry">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-09-04T17:32:16.218Z">
+<meta property="og:updated_time" content="2019-09-22T15:04:09.616Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《深入分布式缓存》 第三章">
 <meta name="twitter:description" content="第三章 动手写缓存3.1 缓存定义的规范核心概念：  CachingProvider CacheManager Cache Entry  Store-By-Value VS Store-By-Reference  Store-By-Value 常见堆内缓存 Store-By-Reference 常见堆外缓存  过期策略ExpiryPolicy 12345publicinterface Expiry">
@@ -310,7 +310,7 @@
       
 
       
-        <h2 id="第三章-动手写缓存"><a href="#第三章-动手写缓存" class="headerlink" title="第三章 动手写缓存"></a>第三章 动手写缓存</h2><h3 id="3-1-缓存定义的规范"><a href="#3-1-缓存定义的规范" class="headerlink" title="3.1 缓存定义的规范"></a>3.1 缓存定义的规范</h3><p>核心概念：</p>
+        <h1 id="第三章-动手写缓存"><a href="#第三章-动手写缓存" class="headerlink" title="第三章 动手写缓存"></a>第三章 动手写缓存</h1><h2 id="3-1-缓存定义的规范"><a href="#3-1-缓存定义的规范" class="headerlink" title="3.1 缓存定义的规范"></a>3.1 缓存定义的规范</h2><p>核心概念：</p>
 <ul>
 <li>CachingProvider</li>
 <li>CacheManager</li>
@@ -336,6 +336,45 @@
 <li>持续时间等于缓存配置的过期时间</li>
 <li>Duration.ZERO表明数据目前已经是过期的</li>
 </ul>
+<h2 id="3-2-缓存框架的实现"><a href="#3-2-缓存框架的实现" class="headerlink" title="3.2 缓存框架的实现"></a>3.2 缓存框架的实现</h2><p>四个接口：clear、get、put、remove</p>
+<p>缓存框架的SPI机制，JDK内置的一种服务发现机制，在Java.util.ServiceLoader。<br>模块之间基于接口编程，实现可插拔。</p>
+<p>基于引用的淘汰算法</p>
+<p>Java的引用：强引用、软引用、弱引用、虚引用</p>
+<table>
+<thead>
+<tr>
+<th>引用类型</th>
+<th>回收策略</th>
+<th>使用场景</th>
+<th>其他</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>强引用（StrongReference）</td>
+<td>不回收</td>
+<td>最普遍的引用</td>
+<td>-</td>
+</tr>
+<tr>
+<td>软引用（SoftReference）</td>
+<td>内存足够不回收；内存不足时回收</td>
+<td>内存敏感的高速缓存</td>
+<td>可以和ReferenceQueue联合使用</td>
+</tr>
+<tr>
+<td>弱引用（WeakReference）</td>
+<td>生命周期更短，垃圾回收器扫描到只有弱引用就回收</td>
+<td>-</td>
+<td>可以和ReferenceQueue联合使用</td>
+</tr>
+<tr>
+<td>虚引用（PhantomReference）</td>
+<td>不决定对象的生命周期</td>
+<td>-</td>
+<td>-</td>
+</tr>
+</tbody></table>
+<p>基于LRU的淘汰算法</p>
 
       
     </div>
@@ -497,7 +536,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#第三章-动手写缓存"><span class="nav-number">1.</span> <span class="nav-text">第三章 动手写缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-缓存定义的规范"><span class="nav-number">1.1.</span> <span class="nav-text">3.1 缓存定义的规范</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第三章-动手写缓存"><span class="nav-number">1.</span> <span class="nav-text">第三章 动手写缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-缓存定义的规范"><span class="nav-number">1.1.</span> <span class="nav-text">3.1 缓存定义的规范</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-缓存框架的实现"><span class="nav-number">1.2.</span> <span class="nav-text">3.2 缓存框架的实现</span></a></li></ol></li></ol></div>
             
 
           </div>
